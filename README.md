@@ -1,5 +1,5 @@
 # CMClient
 
-Use this module to kick off many common client triggers like Machine Policy Download, Discovery Data Cycle, Compliance Evaluation, Application Deployment Evaluation, Hardware Inventory, Software Inventory, Update Deployment Evaluation and Update Scan.  Also stay tuned for many more ConfigMgr client functions!
+Use this module to kick off many common client triggers like Machine Policy Download, Discovery Data Cycle, Compliance Evaluation, Application Deployment Evaluation, Hardware Inventory, Software Inventory, Update Deployment Evaluation and Update Scan.  
 
-Each of the client action functions is simply an easy way to trigger client schedule IDs. Each function feeds back to the the function that’s doing the work; Invoke-CMClientAction. If you specify -AsJob on any function, that gets passed to the Initialize-CMClientJob.
+This module has something a lot of the other modules I've seen don't have which is -AsJob support.  This means you don't have to wait around on each of your clients to invoke whatever action they'r doing.  Instead, you can use the -AsJob parameter which will invoke each action as a PowerShell job so you can run lots of actions asynchronously.
