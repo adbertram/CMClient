@@ -4,6 +4,8 @@
 	 Created on:   	6/9/2014 1:57 PM
 	 Created by:   	Adam Bertram
 	 Filename:     	CMClient.psm1
+     Modified:      8/17/2015 03:02:23 PM 
+     Modified by:   Jason Wasser @wasserja
 	-------------------------------------------------------------------------
 	 Module Name: CMClient
 	===========================================================================
@@ -29,7 +31,9 @@ function Invoke-CMClientAction {
 	[CmdletBinding()]
 	param
 	(
-		[Parameter(Mandatory = $true)]
+		[Parameter(Mandatory = $true,
+                   ValueFromPipelineByPropertyName=$true,
+                   Position=0)]
 		[string]$Computername,
 		[Parameter(Mandatory = $true)]
 		[ValidateSet('MachinePolicy',
@@ -46,7 +50,8 @@ function Invoke-CMClientAction {
 	)
 	
 	Begin {
-		try {
+
+        try {
 			$ScheduleIDMappings = @{
 				'MachinePolicy' = '{00000000-0000-0000-0000-000000000021}';
 				'DiscoveryData' = '{00000000-0000-0000-0000-000000000003}';
@@ -65,16 +70,16 @@ function Invoke-CMClientAction {
 	}
 	Process {
 		try {
-			## Args1 represents the computername and $args[1] represents the scheduleID
-			$ActionScriptBlock = {
-				[void] ([wmiclass] "\\$($args[0])\root\ccm:SMS_Client").TriggerSchedule($args[1]);
+			## $args[0] represents the computername and $args[1] represents the scheduleID
+            $ActionScriptBlock = {
+			    [void] ([wmiclass] "\\$($args[0])\root\ccm:SMS_Client").TriggerSchedule($args[1]);
 				if (!$?) {
 					throw "Failed to initiate a $ClientAction on $($args[0])"
-				}
-			}
+				    }
+			    }
 			
 			if ($AsJob.IsPresent) {
-				$Params = @{
+                $Params = @{
 					'Computername' = $Computername;
 					'OriginatingFunction' = $ClientAction;
 					'ScriptBlock' = $ActionScriptBlock;
@@ -82,6 +87,7 @@ function Invoke-CMClientAction {
 				}
 				Initialize-CMClientJob @Params
 			} else {
+                Write-Verbose "Initializing $ClientAction on $Computername."
 				Invoke-Command -ScriptBlock $ActionScriptBlock -ArgumentList $Computername,$ScheduleID
 			}
 		} catch {
@@ -178,7 +184,7 @@ function Invoke-CMClientMachinePolicyDownload {
 				   ValueFromPipeline = $true,
 				   ValueFromPipelineByPropertyName = $true)]
 		[alias('Name')]
-		[string]$Computername,
+		[string[]]$Computername,
 		[Parameter()]
 		[switch]$AsJob
 	)
@@ -187,12 +193,14 @@ function Invoke-CMClientMachinePolicyDownload {
 		
 	}
 	Process {
-		$Params = @{
-			'Computername'	= $Computername;
-			'ClientAction'  = 'MachinePolicy';
-			'AsJob'			= $AsJob.IsPresent
-		}
-		Invoke-CMClientAction @Params
+		foreach ($Computer in $Computername) {
+            $Params = @{
+			    'Computername'	= $Computer;
+			    'ClientAction'  = 'MachinePolicy';
+			    'AsJob'			= $AsJob.IsPresent
+		        }
+		    Invoke-CMClientAction @Params
+            }
 	}
 	End {
 		
@@ -222,7 +230,7 @@ function Invoke-CMClientDiscoveryDataCycle {
 		[Parameter(Mandatory = $true,
 				   ValueFromPipeline = $true,
 				   ValueFromPipelineByPropertyName = $true)]
-		[string]$Computername,
+		[string[]]$Computername,
 		[Parameter()]
 		[switch]$AsJob
 	)
@@ -231,12 +239,14 @@ function Invoke-CMClientDiscoveryDataCycle {
 		
 	}
 	Process {
-		$Params = @{
-			'Computername' = $Computername;
-			'ClientAction' = 'DiscoveryData';
-			'AsJob' = $AsJob.IsPresent
-		}
-		Invoke-CMClientAction @Params
+		foreach ($Computer in $Computername) {
+            $Params = @{
+			    'Computername' = $Computer;
+			    'ClientAction' = 'DiscoveryData';
+			    'AsJob' = $AsJob.IsPresent
+		        }
+		        Invoke-CMClientAction @Params
+            }
 	}
 	End {
 		
@@ -266,7 +276,7 @@ function Invoke-CMClientComplianceEvaluation {
 		[Parameter(Mandatory = $true,
 				   ValueFromPipeline = $true,
 				   ValueFromPipelineByPropertyName = $true)]
-		[string]$Computername,
+		[string[]]$Computername,
 		[Parameter()]
 		[switch]$AsJob
 	)
@@ -275,12 +285,14 @@ function Invoke-CMClientComplianceEvaluation {
 		
 	}
 	Process {
-		$Params = @{
-			'Computername' = $Computername;
-			'ClientAction' = 'ComplianceEvaluation';
-			'AsJob' = $AsJob.IsPresent
-		}
-		Invoke-CMClientAction @Params
+		foreach ($Computer in $Computername) {
+            $Params = @{
+			    'Computername' = $Computer;
+			    'ClientAction' = 'ComplianceEvaluation';
+			    'AsJob' = $AsJob.IsPresent
+		    }
+		    Invoke-CMClientAction @Params
+            }
 	}
 	End {
 		
@@ -310,7 +322,7 @@ function Invoke-CMClientApplicationDeploymentEvaluation {
 		[Parameter(Mandatory = $true,
 				   ValueFromPipeline = $true,
 				   ValueFromPipelineByPropertyName = $true)]
-		[string]$Computername,
+		[string[]]$Computername,
 		[Parameter()]
 		[switch]$AsJob
 	)
@@ -319,12 +331,14 @@ function Invoke-CMClientApplicationDeploymentEvaluation {
 		
 	}
 	Process {
-		$Params = @{
-			'Computername' = $Computername;
-			'ClientAction' = 'AppDeployment';
-			'AsJob' = $AsJob.IsPresent
-		}
-		Invoke-CMClientAction @Params
+		foreach ($Computer in $Computername) {
+            $Params = @{
+			    'Computername' = $Computer;
+			    'ClientAction' = 'AppDeployment';
+			    'AsJob' = $AsJob.IsPresent
+		    }
+		    Invoke-CMClientAction @Params
+            }
 	}
 	End {
 		
@@ -354,7 +368,7 @@ function Invoke-CMClientHardwareInventory {
 		[Parameter(Mandatory = $true,
 				   ValueFromPipeline = $true,
 				   ValueFromPipelineByPropertyName = $true)]
-		[string]$Computername,
+		[string[]]$Computername,
 		[Parameter()]
 		[switch]$AsJob
 	)
@@ -363,12 +377,14 @@ function Invoke-CMClientHardwareInventory {
 		
 	}
 	Process {
-		$Params = @{
-			'Computername' = $Computername;
-			'ClientAction' = 'HardwareInventory';
-			'AsJob' = $AsJob.IsPresent
-		}
-		Invoke-CMClientAction @Params
+		foreach ($Computer in $Computername) {
+            $Params = @{
+			    'Computername' = $Computer;
+			    'ClientAction' = 'HardwareInventory';
+			    'AsJob' = $AsJob.IsPresent
+		    }
+		    Invoke-CMClientAction @Params
+            }
 	}
 	End {
 		
@@ -398,7 +414,7 @@ function Invoke-CMClientUpdateDeploymentEvaluation {
 		[Parameter(Mandatory = $true,
 				   ValueFromPipeline = $true,
 				   ValueFromPipelineByPropertyName = $true)]
-		[string]$Computername,
+		[string[]]$Computername,
 		[Parameter()]
 		[switch]$AsJob
 	)
@@ -407,12 +423,14 @@ function Invoke-CMClientUpdateDeploymentEvaluation {
 		
 	}
 	Process {
-		$Params = @{
-			'Computername' = $Computername;
-			'ClientAction' = 'UpdateDeployment';
-			'AsJob' = $AsJob.IsPresent
-		}
-		Invoke-CMClientAction @Params
+		foreach ($Computer in $Computername) {
+            $Params = @{
+			    'Computername' = $Computername;
+			    'ClientAction' = 'UpdateDeployment';
+			    'AsJob' = $AsJob.IsPresent
+		    }
+		    Invoke-CMClientAction @Params
+            }
 	}
 	End {
 		
@@ -442,7 +460,7 @@ function Invoke-CMClientUpdateScan {
 		[Parameter(Mandatory = $true,
 				   ValueFromPipeline = $true,
 				   ValueFromPipelineByPropertyName = $true)]
-		[string]$Computername,
+		[string[]]$Computername,
 		[Parameter()]
 		[switch]$AsJob
 	)
@@ -451,12 +469,14 @@ function Invoke-CMClientUpdateScan {
 		
 	}
 	Process {
-		$Params = @{
-			'Computername' = $Computername;
-			'ClientAction' = 'UpdateScan';
-			'AsJob' = $AsJob.IsPresent
-		}
-		Invoke-CMClientAction @Params
+		foreach ($Computer in $Computername) {
+            $Params = @{
+			    'Computername' = $Computername;
+			    'ClientAction' = 'UpdateScan';
+			    'AsJob' = $AsJob.IsPresent
+		    }
+		    Invoke-CMClientAction @Params
+            }
 	}
 	End {
 		
@@ -486,7 +506,7 @@ function Invoke-CMClientSoftwareInventory {
 		[Parameter(Mandatory = $true,
 				   ValueFromPipeline = $true,
 				   ValueFromPipelineByPropertyName = $true)]
-		[string]$Computername,
+		[string[]]$Computername,
 		[Parameter()]
 		[switch]$AsJob
 	)
@@ -495,12 +515,14 @@ function Invoke-CMClientSoftwareInventory {
 		
 	}
 	Process {
-		$Params = @{
-			'Computername' = $Computername;
-			'ClientAction' = 'SoftwareInventory';
-			'AsJob' = $AsJob.IsPresent
-		}
-		Invoke-CMClientAction @Params
+		foreach ($Computer in $Computername) {
+            $Params = @{
+			    'Computername' = $Computername;
+			    'ClientAction' = 'SoftwareInventory';
+			    'AsJob' = $AsJob.IsPresent
+		    }
+		    Invoke-CMClientAction @Params
+            }
 	}
 	End {
 		
