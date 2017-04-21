@@ -31,7 +31,7 @@ function Invoke-CMClientUpdateDeploymentEvaluation {
 	Process {
 		foreach ($Computer in $Computername) {
             $Params = @{
-			    'Computername' = $Computername;
+			    'Computername' = $Computer;
 			    'ClientAction' = 'UpdateDeployment';
 			    'AsJob' = $AsJob.IsPresent
 		    }
