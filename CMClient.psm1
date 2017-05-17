@@ -4,7 +4,7 @@
 	 Created on:   	6/9/2014 1:57 PM
 	 Created by:   	Adam Bertram
 	 Filename:     	CMClient.psm1
-     Modified:      8/17/2015 03:02:23 PM 
+     Modified:      1/11/2017 04:21:04 PM  
      Modified by:   Jason Wasser @wasserja
 	-------------------------------------------------------------------------
 	 Module Name: CMClient
@@ -425,7 +425,7 @@ function Invoke-CMClientUpdateDeploymentEvaluation {
 	Process {
 		foreach ($Computer in $Computername) {
             $Params = @{
-			    'Computername' = $Computername;
+			    'Computername' = $Computer;
 			    'ClientAction' = 'UpdateDeployment';
 			    'AsJob' = $AsJob.IsPresent
 		    }
@@ -471,7 +471,7 @@ function Invoke-CMClientUpdateScan {
 	Process {
 		foreach ($Computer in $Computername) {
             $Params = @{
-			    'Computername' = $Computername;
+			    'Computername' = $Computer;
 			    'ClientAction' = 'UpdateScan';
 			    'AsJob' = $AsJob.IsPresent
 		    }
@@ -517,7 +517,7 @@ function Invoke-CMClientSoftwareInventory {
 	Process {
 		foreach ($Computer in $Computername) {
             $Params = @{
-			    'Computername' = $Computername;
+			    'Computername' = $Computer;
 			    'ClientAction' = 'SoftwareInventory';
 			    'AsJob' = $AsJob.IsPresent
 		    }
