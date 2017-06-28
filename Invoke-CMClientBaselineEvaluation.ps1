@@ -58,26 +58,29 @@ ReturnValue      : 0
 PSComputerName   : SERVER02
 
 #>
-function Invoke-CMClientBaselineEvaluation
-{
+function Invoke-CMClientBaselineEvaluation {
     [CmdletBinding()]
     param (        
-        [Parameter(Mandatory=$false,
-                   ValueFromPipelineByPropertyName=$true,
-                   ValueFromPipeline=$true,
-                   Position=0)]
-        [string[]]$ComputerName=$env:COMPUTERNAME
+        [Parameter(Mandatory = $false,
+            ValueFromPipelineByPropertyName = $true,
+            ValueFromPipeline = $true,
+            Position = 0)]
+        [string[]]$ComputerName = $env:COMPUTERNAME
     )
     begin {}
     process {
         foreach ($Computer in $ComputerName) {
             # Get a list of baseline objects assigned to the remote computer
+            Write-Verbose -Message "Attempting to get Configuration Baselines for $Computer"
             $Baselines = Get-WmiObject -ComputerName $Computer -Namespace root\ccm\dcm -Class SMS_DesiredConfiguration
 
             # For each (%) baseline object, call SMS_DesiredConfiguration.TriggerEvaluation, passing in the Name and Version as params
-            $Baselines | foreach { ([wmiclass]"\\$Computer\root\ccm\dcm:SMS_DesiredConfiguration").TriggerEvaluation($_.Name, $_.Version) }
+            foreach ($Baseline in $Baselines) {
+                Write-Verbose -Message "Triggering configuration baseline evaluation $($Baseline.DisplayName) on $Computer"
+                ([wmiclass]"\\$Computer\root\ccm\dcm:SMS_DesiredConfiguration").TriggerEvaluation($Baseline.Name, $Baseline.Version) 
             }
         }
+    }
     end {}
     
 }
