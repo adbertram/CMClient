@@ -27,6 +27,7 @@ function Get-CMClientPendingUpdates {
     process {
 
         foreach ($Computer in $ComputerName) {
+            Write-Verbose -Message "Checking for pending updates on $Computer"
             if ($Computer -eq $env:COMPUTERNAME) {
                 $SccmPendingUpdates = Get-WmiObject -Namespace root\ccm\clientsdk -Class CCM_SoftwareUpdate
                 }
