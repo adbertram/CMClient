@@ -28,7 +28,6 @@ function Get-CMClientUpdates {
     process {
 
         foreach ($Computer in $ComputerName) {
-            Write-Verbose -Message "Checking for updates on $Computer"
             if ($Computer -eq $env:COMPUTERNAME) {
                 $SccmUpdates = Get-WmiObject -Namespace root\ccm\SoftwareUpdates\UpdatesStore -Class CCM_UpdateStatus
                 }

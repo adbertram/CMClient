@@ -9,19 +9,20 @@ PS C:\> Get-Command -Module CMClient
 
 CommandType Name                                           Version Source
 ----------- ----                                           ------- ------
-Function    Get-CMClientBaselineEvaluation                 1.6.0   CMClient
-Function    Get-CMClientComputerByLoggedOnUser             1.6.0   CMClient
-Function    Get-CMClientDeviceCollectionMembership         1.6.0   CMClient
-Function    Get-CMClientPackage                            1.6.0   CMClient
-Function    Get-CMClientPendingUpdates                     1.6.0   CMClient
-Function    Get-CMClientUpdates                            1.6.0   CMClient
-Function    Get-CMClientVersion                            1.6.0   CMClient
-Function    Invoke-CMClientApplicationDeploymentEvaluation 1.6.0   CMClient
-Function    Invoke-CMClientBaselineEvaluation              1.6.0   CMClient
-Function    Invoke-CMClientComplianceEvaluation            1.6.0   CMClient
-Function    Invoke-CMClientDiscoveryDataCycle              1.6.0   CMClient
-Function    Invoke-CMClientHardwareInventory               1.6.0   CMClient
-Function    Invoke-CMClientMachinePolicyDownload           1.6.0   CMClient
-Function    Invoke-CMClientUpdateDeploymentEvaluation      1.6.0   CMClient
-Function    Invoke-CMClientUpdateScan                      1.6.0   CMClient
+Function    Get-CMClientBaselineEvaluation                 1.7.0   CMClient
+Function    Get-CMClientComputerByLoggedOnUser             1.7.0   CMClient
+Function    Get-CMClientDeviceCollectionMembership         1.7.0   CMClient
+Function    Get-CMClientPackage                            1.7.0   CMClient
+Function    Get-CMClientPendingUpdates                     1.7.0   CMClient
+Function    Get-CMClientUpdates                            1.7.0   CMClient
+Function    Get-CMClientVersion                            1.7.0   CMClient
+Function    Invoke-CMClientApplicationDeploymentEvaluation 1.7.0   CMClient
+Function    Invoke-CMClientBaselineEvaluation              1.7.0   CMClient
+Function    Invoke-CMClientComplianceEvaluation            1.7.0   CMClient
+Function    Invoke-CMClientDiscoveryDataCycle              1.7.0   CMClient
+Function    Invoke-CMClientHardwareInventory               1.7.0   CMClient
+Function    Invoke-CMClientMachinePolicyDownload           1.7.0   CMClient
+Function    Invoke-CMClientUpdateDeploymentEvaluation      1.7.0   CMClient
+Function    Invoke-CMClientUpdateScan                      1.7.0   CMClient
+Function    Clear-CMClientCache                            1.7.0   CMClient
 </pre>
