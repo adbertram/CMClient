@@ -1,10 +1,9 @@
 ﻿<#
-.SYNOPSIS
+.Synopsis
    Get the status of Configuration Manager client configuration baselines.
 
 .DESCRIPTION
    Get the status of Configuration Manager client configuration baselines.
-
 .NOTES
    Created by: Jason Wasser @wasserja
    Modified: 5/17/2017 04:05:12 PM 
@@ -66,7 +65,6 @@ function Get-CMClientBaselineEvaluation
     process {
         foreach ($Computer in $ComputerName) {
             # Get a list of baseline objects assigned to the remote computer
-            Write-Verbose -Message "Attempting to get Configuration Baselines for $Computer"
             $Baselines = Get-WmiObject -ComputerName $Computer -Namespace root\ccm\dcm -Class SMS_DesiredConfiguration
 
             # For each (%) baseline object, call SMS_DesiredConfiguration.TriggerEvaluation, passing in the Name and Version as params
